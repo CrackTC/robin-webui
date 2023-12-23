@@ -1,0 +1,5 @@
+services:
+  app:
+    image: cracktc/qwordcloud_webui
+    ports:
+      - 8080:80
