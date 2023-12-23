@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        redirecting...
+    </title>
+</head>
+
+<body>
+    <script>
+        const url = localStorage.getItem('url');
+        const token = localStorage.getItem('token');
+        if (url == null || token == null) {
+            window.location.replace("login.html");
+        } else {
+            window.location.replace("dashboard.html");
+        }
+    </script>
+</body>
+
+</html>

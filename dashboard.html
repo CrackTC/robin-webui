@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const url = localStorage.getItem("url");
+        const token = localStorage.getItem("token");
+        if (url == null || token == null) {
+            window.location.replace("login.html");
+        }
+
+        $.ajax({
+            url: new URL("api/get_handlers", url),
+            type: "GET",
+            success: result => {
+                result.forEach(({name, enabled}) => {
+                    $("#handlers").append(`<li>${name} <input type="checkbox" ${enabled ? "checked" : ""} data-name="${name}"></li>`);
+                });
+
+                $("#handlers").on("change", "input", function () {
+                    const name = $(this).data("name");
+                    const enabled = $(this).prop("checked");
+
+                    $.ajax({
+                        url: new URL(enabled ? "api/enable_handler" : "api/disable_handler", url),
+                        type: "GET",
+                        data: {name, token},
+                        success: res => {
+                            $("#status").text(res);
+                            $("#status").css("color", "green");
+                        },
+                        error: (_, textStatus) => {
+                            $("#status").text(textStatus);
+                            $("#status").css("color", "red");
+                            $(this).prop("checked", !enabled);
+                        }
+                    })
+                });
+            },
+        })
+
+    </script>
+</head>
+
+<body>
+    <h1>Dashboard</h1>
+    <p id="status"></p>
+    <ul id="handlers">
+    </ul>
+</body>
+
+</html>

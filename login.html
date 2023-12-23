@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Login
+    </title>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(() => {
+            const login = $('#login');
+            login.submit(e => {
+                e.preventDefault();
+                const url = login.find('input[name="url"]');
+                const token = login.find('input[name="token"]');
+                console.log(url, token)
+                $.ajax({
+                    url: new URL('api/auth', url.val()),
+                    type: 'GET',
+                    data: {token: token.val()},
+                    success: data => {
+                        localStorage.setItem('url', url.val());
+                        localStorage.setItem('token', token.val());
+                        window.location.replace('dashboard.html');
+                    },
+                    error: (_, textStatus) => {
+                        login.append('<p style="color: red;"> auth failed: ' + textStatus + '</p>');
+                        token.val('')
+                    }
+                });
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <form id="login">
+        <input type="text" name="url" placeholder="http://127.0.0.1:3101/" required>
+        <input type="password" name="token" required>
+        <input type="submit" value="Login">
+    </form>
+</body>
+
+</html>
