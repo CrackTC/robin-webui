@@ -43,6 +43,11 @@
             },
         })
 
+        $("#logout").click(() => {
+            localStorage.removeItem("url");
+            localStorage.removeItem("token");
+            window.location.replace("login.html");
+        });
     </script>
 </head>
 
@@ -51,6 +56,7 @@
     <p id="status"></p>
     <ul id="handlers">
     </ul>
+    <button id="logout">Logout</button>
 </body>
 
 </html>
