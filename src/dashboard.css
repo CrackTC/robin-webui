@@ -1,0 +1,53 @@
+body {
+    font-family: monospace;
+}
+
+h1 {
+    text-align: center;
+}
+
+#status {
+    text-align: center;
+}
+
+#handlers {
+    list-style-type: none;
+    padding: 0;
+}
+
+#handlers li {
+    margin-bottom: 10px;
+}
+
+#handlers input[type=checkbox] {
+    margin-left: 10px;
+}
+
+#groups {
+    list-style-type: none;
+    padding: 0;
+}
+
+#groups li {
+    margin-bottom: 10px;
+}
+
+#groups input[type=checkbox] {
+    margin-left: 10px;
+}
+
+button {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+}
+
+.vsplit {
+    display: flex;
+    flex-direction: row;
+}
+
+.vsplit>div {
+    flex: 1;
+    margin: 10px;
+}
