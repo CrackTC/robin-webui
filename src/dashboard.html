@@ -22,32 +22,87 @@
                 type: "GET",
                 success: result => {
                     result.forEach(({name, enabled}) => {
-                        $("#handlers").append(`<li>${name} <input type="checkbox" ${enabled ? "checked" : ""} data-name="${name}"></li>`);
+                        $("#handlers").append(`<li><input type="radio" name="handler" value="${name}"> ${name} <input type="checkbox" ${enabled ? "checked" : ""} data-name="${name}"></li>`);
                     });
+                }
+            }).then(() => {
+                $("#handlers").on("change", "input[type=checkbox]", function () {
+                    const name = $(this).data("name");
+                    const enabled = $(this).prop("checked");
 
-                    $("#handlers").on("change", "input", function () {
-                        const name = $(this).data("name");
-                        const enabled = $(this).prop("checked");
+                    $.ajax({
+                        url: new URL(enabled ? "api/enable_handler" : "api/disable_handler", url),
+                        type: "GET",
+                        data: {name, token},
+                        success: res => {
+                            $("#status").text(res);
+                            $("#status").css("color", "green");
+                        },
+                        error: (_, textStatus) => {
+                            $("#status").text(textStatus);
+                            $("#status").css("color", "red");
+                            $(this).prop("checked", !enabled);
+                        }
+                    })
+                });
 
+                $("#handlers").on("change", "input[type=radio]", function () {
+                    const name = $(this).val();
+
+                    $.ajax({
+                        url: new URL("api/get_groups", url),
+                        type: "GET",
+                        data: {token},
+                        success: result => {
+                            $("#groups").empty();
+                            result.forEach(name => {
+                                $("#groups").append(`<li><input type="checkbox" data-name="${name}"> ${name}</li>`);
+                            });
+                        },
+                        error: (_, textStatus) => {
+                            $("#status").text(textStatus);
+                            $("#status").css("color", "red");
+                        }
+                    }).then(() => {
                         $.ajax({
-                            url: new URL(enabled ? "api/enable_handler" : "api/disable_handler", url),
+                            url: new URL("api/get_handler_groups", url),
                             type: "GET",
                             data: {name, token},
-                            success: res => {
-                                $("#status").text(res);
-                                $("#status").css("color", "green");
+                            success: result => {
+                                result.forEach(name => {
+                                    $(`input[data-name="${name}"]`).prop("checked", true);
+                                });
                             },
                             error: (_, textStatus) => {
                                 $("#status").text(textStatus);
                                 $("#status").css("color", "red");
-                                $(this).prop("checked", !enabled);
                             }
-                        })
+                        });
                     });
+                });
 
-                    $("#status").text("Loaded");
-                    $("#status").css("color", "green");
-                },
+                $("#groups").on("change", "input[type=checkbox]", function () {
+                    const name = $(this).data("name");
+                    const enabled = $(this).prop("checked");
+
+                    $.ajax({
+                        url: new URL(enabled ? "api/add_group" : "api/remove_group", url),
+                        type: "GET",
+                        data: {name, token},
+                        success: res => {
+                            $("#status").text(res);
+                            $("#status").css("color", "green");
+                        },
+                        error: (_, textStatus) => {
+                            $("#status").text(textStatus);
+                            $("#status").css("color", "red");
+                            $(this).prop("checked", !enabled);
+                        }
+                    })
+                });
+
+                $("#status").text("Loaded");
+                $("#status").css("color", "green");
             })
 
             $("#logout").click(() => {
@@ -62,8 +117,10 @@
 <body>
     <h1>Dashboard</h1>
     <p id="status"></p>
-    <ul id="handlers">
-    </ul>
+    <ul id="handlers"></ul>
+    <hr>
+    <ul id="groups"></ul>
+    <hr>
     <button id="logout">Logout</button>
 </body>
 
