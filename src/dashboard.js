@@ -9,7 +9,7 @@ $(document).ready(() => {
     }
 
     $.ajax({
-        url: new URL("api/get_handlers", url),
+        url: new URL("api/handler/all", url),
         type: "GET",
         success: result => {
             result.data.forEach(({name, enabled}) => {
@@ -22,7 +22,7 @@ $(document).ready(() => {
             const enabled = $(this).prop("checked");
 
             $.ajax({
-                url: new URL(enabled ? "api/enable_handler" : "api/disable_handler", url),
+                url: new URL(enabled ? "api/handler/enable" : "api/handler/disable", url),
                 type: "GET",
                 data: {name, token},
                 success: result => {
@@ -41,7 +41,7 @@ $(document).ready(() => {
             const name = $(this).val();
 
             $.ajax({
-                url: new URL("api/get_groups", url),
+                url: new URL("api/group/all", url),
                 type: "GET",
                 data: {token},
                 success: result => {
@@ -56,7 +56,7 @@ $(document).ready(() => {
                 }
             }).then(() => {
                 $.ajax({
-                    url: new URL("api/get_handler_groups", url),
+                    url: new URL("api/handler/groups", url),
                     type: "GET",
                     data: {name, token},
                     success: result => {
@@ -78,7 +78,7 @@ $(document).ready(() => {
             const enabled = $(this).prop("checked");
 
             $.ajax({
-                url: new URL(enabled ? "api/add_group" : "api/remove_group", url),
+                url: new URL(enabled ? "api/group/add" : "api/group/remove", url),
                 type: "GET",
                 data: {name, group, token},
                 success: result => {
