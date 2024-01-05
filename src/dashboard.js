@@ -40,7 +40,7 @@ $(document).ready(() => {
         $("#handlers").on("change", "input[type=radio]", function () {
             const name = $(this).val();
 
-            $.ajax({
+            const load_groups = $.ajax({
                 url: new URL("api/group/all", url),
                 type: "GET",
                 data: {token},
@@ -54,21 +54,22 @@ $(document).ready(() => {
                     $("#status").text(textStatus);
                     $("#status").css("color", "red");
                 }
-            }).then(() => {
-                $.ajax({
-                    url: new URL("api/handler/groups", url),
-                    type: "GET",
-                    data: {name, token},
-                    success: result => {
-                        result.data.forEach(name => {
-                            $(`input[data-name="${name}"]`).prop("checked", true);
-                        });
-                    },
-                    error: (_, textStatus) => {
-                        $("#status").text(textStatus);
-                        $("#status").css("color", "red");
-                    }
-                });
+            })
+
+            $.ajax({
+                url: new URL("api/handler/groups", url),
+                type: "GET",
+                data: {name, token},
+                success: async result => {
+                    await load_groups;
+                    result.data.forEach(name => {
+                        $(`input[data-name="${name}"]`).prop("checked", true);
+                    });
+                },
+                error: (_, textStatus) => {
+                    $("#status").text(textStatus);
+                    $("#status").css("color", "red");
+                }
             });
         });
 
