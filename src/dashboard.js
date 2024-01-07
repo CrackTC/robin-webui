@@ -8,6 +8,8 @@ $(document).ready(() => {
         window.location.replace("login.html");
     }
 
+    $("#url").text("url: " + url);
+
     $.ajax({
         url: new URL("api/handler/all", url),
         type: "GET",
