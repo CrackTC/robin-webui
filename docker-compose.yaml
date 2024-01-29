@@ -1,5 +1,5 @@
 services:
   app:
-    image: cracktc/qwordcloud_webui
+    image: cracktc/robin-webui
     ports:
       - 8080:80

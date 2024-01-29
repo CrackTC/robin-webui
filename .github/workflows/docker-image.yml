@@ -23,4 +23,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: cracktc/qwordcloud_webui:latest
+          tags: cracktc/robin-webui:latest
